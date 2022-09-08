@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using NetKubernetes2._0.Middleware;
 using NetKubernetes2._0.Models;
 using NetKubernetes2._0.Token;
@@ -42,32 +43,32 @@ namespace NetKubernetes2._0.Data.Inmuebles
             inmueble.FechaCreacion = DateTime.Now;
             inmueble.IdUsuario = Guid.Parse(usuario!.Id);
 
-            _contexto.Inmuebles!.Add(inmueble);
+            await _contexto.Inmuebles!.AddAsync(inmueble);
         }
 
-        public void DeleteInmueble(int id)
+        public async Task DeleteInmueble(int id)
         {
-            var inmueble = _contexto.Inmuebles!
-                .FirstOrDefault(x => x.Id == id);
+            var inmueble = await _contexto.Inmuebles!
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             _contexto.Inmuebles!.Remove(inmueble!);
         }
 
-        public IEnumerable<Inmueble> GetAllInmuebles()
+        public async Task<IEnumerable<Inmueble>> GetAllInmuebles()
         {
-            return _contexto.Inmuebles!.ToList();
+            return await _contexto.Inmuebles!.ToListAsync();
         }
 
-        public Inmueble GetInmuebleById(int id)
+        public async Task<Inmueble> GetInmuebleById(int id)
         {
 
-            return _contexto.Inmuebles!.FirstOrDefault(x => x.Id == id)!;
+            return await _contexto.Inmuebles!.FirstOrDefaultAsync(x => x.Id == id)!;
 
         }
 
-        public bool SaveChanges()
+        public async Task <bool> SaveChanges()
         {
-            return (_contexto.SaveChanges() >= 0);
+            return (( await _contexto.SaveChangesAsync()) >= 0);
 
         }
     }
